@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Form, FormGroup, Input } from 'reactstrap';
 
-const CreateTask = (props) => {
+const EditTask = (props) => {
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
 
-    const handleSaveTask = () => {
-        let task = {};
-        task['Name'] = taskName;
-        task['Description'] = taskDescription;
-        props.save(task);
+    const handleUpdateTask = (e) => {
+        e.preventDefault();
+        let tempUpdate = {};
+        tempUpdate['Name'] = taskName;
+        tempUpdate['Description'] = taskDescription;
+        props.updateTask(tempUpdate);
     };
+
+    useEffect(() => {
+        setTaskName(props.taskObj.Name);
+        setTaskDescription(props.taskObj.Description);
+    }, []);
 
     return (
         <Modal isOpen={props.modal} toggle={props.toggle}>
-            <ModalHeader toggle={props.toggle}>What is your plan today?</ModalHeader>
+            <ModalHeader toggle={props.toggle}>Update your task here</ModalHeader>
             <ModalBody>
                 <Form>
                     {/* task name */}
@@ -24,6 +30,7 @@ const CreateTask = (props) => {
                             id='taskName'
                             className='form-control'
                             type='text'
+                            placeholder='Enter your task name ...'
                             value={taskName}
                             onChange={(e) => setTaskName(e.target.value)}
                         />
@@ -36,6 +43,7 @@ const CreateTask = (props) => {
                             id='taskDescription'
                             className='form-control'
                             rows={5}
+                            placeholder='Description your task ...'
                             value={taskDescription}
                             onChange={(e) => setTaskDescription(e.target.value)}
                         />
@@ -43,8 +51,8 @@ const CreateTask = (props) => {
                 </Form>
             </ModalBody>
             <ModalFooter>
-                <Button color='primary' onClick={handleSaveTask}>
-                    Create
+                <Button color='primary' onClick={handleUpdateTask}>
+                    Update
                 </Button>
                 <Button color='secondary' onClick={props.toggle}>
                     Cancel
@@ -54,4 +62,4 @@ const CreateTask = (props) => {
     );
 };
 
-export default CreateTask;
+export default EditTask;
